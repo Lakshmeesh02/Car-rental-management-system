@@ -54,6 +54,36 @@ def register(reg_type):
             cursor.close()
             connection.close()
             return "Try again"
+        
+    if request.method=="POST" and reg_type=="admin":
+        username=request.form.get("ausername")
+        password=request.form.get("apassword")
+        connection=create_sql_connection()
+        cursor=connection.cursor()
+        check="select admin_id from admin where username=%s"
+        check_data=(username,)
+        cursor.execute(check,check_data)
+        existing_admins=cursor.fetchone()
+        if existing_admins:
+            cursor.close()
+            connection.close()
+            return "Admin already exists"
+        
+        query="insert into admin (username, password) values (%s, %s)"
+        data=(username, password)
+        
+        try:
+            cursor.execute(query, data)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return redirect(url_for('home'))
+        
+        except Exception as e:
+            print(e)
+            cursor.close()
+            connection.close()
+            return "Try again"
 
     return render_template(f"reg{reg_type}.html")
 
