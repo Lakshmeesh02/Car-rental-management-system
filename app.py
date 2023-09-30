@@ -30,6 +30,15 @@ def register(reg_type):
 
         connection=create_sql_connection()
         cursor=connection.cursor()
+        check="select customer_id from customer where username=%s"
+        check_data=(username,)
+        cursor.execute(check,check_data)
+        existing_users=cursor.fetchone()
+        if existing_users:
+            cursor.close()
+            connection.close()
+            return "Username already taken"
+        
         query="insert into customer (fname, lname, username, password, contact) values (%s, %s, %s, %s, %s)"
         data=(fname, lname, username, password, contact)
 
