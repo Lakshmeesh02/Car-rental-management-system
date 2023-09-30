@@ -58,6 +58,7 @@ def register(reg_type):
     if request.method=="POST" and reg_type=="admin":
         username=request.form.get("ausername")
         password=request.form.get("apassword")
+
         connection=create_sql_connection()
         cursor=connection.cursor()
         check="select admin_id from admin where username=%s"
@@ -84,6 +85,40 @@ def register(reg_type):
             cursor.close()
             connection.close()
             return "Try again"
+        
+    if request.method=="POST" and reg_type=="company":
+        password=request.form.get("password")
+        name=request.form.get("name")
+        contact=request.form.get("contact")
+
+        connection=create_sql_connection()
+        cursor=connection.cursor()
+        check="select company_id from company where name=%s"
+        check_data=(name,)
+        cursor.execute(check,check_data)
+        existing_companies=cursor.fetchone()
+        if existing_companies:
+            cursor.close()
+            connection.close()
+            return "Company exists already"
+        
+        query="insert into company (name, password, contact) values (%s, %s, %s)"
+        data=(name,password,contact)
+
+        try:
+            cursor.execute(query,data)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return redirect(url_for('home'))
+        
+        except Exception as e:
+            print(e)
+            cursor.close()
+            connection.close()
+            return "Try again"
+
+
 
     return render_template(f"reg{reg_type}.html")
 
