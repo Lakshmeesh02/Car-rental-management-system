@@ -29,9 +29,26 @@ def creds(login_type):
         cursor.close()
         connection.close()
         if not existing_user:
-            return "No such user exists"
+            return "Invalid credentials"
         else:
-           return render_template("userhome.html", username=username)
+           return redirect(url_for('customerpage',customername=username))
+        
+    if request.method=="POST" and login_type=="company":
+        username=request.form.get('cusername')
+        password=request.form.get('cpassword')
+        connection=create_sql_connection()
+        cursor=connection.cursor()
+        validate="select company_id from companies where name=%s and password=%s"
+        validate_data=(username,password)
+        cursor.execute(validate,validate_data)
+        existing_company=cursor.fetchone()
+        print(existing_company)
+        cursor.close()
+        connection.close()
+        if not existing_company:
+            return "Invalid credentials"
+        else:
+            return redirect(url_for("companypage",companyname=username))
             
     return render_template(f"askcred{login_type}.html")
 
@@ -106,6 +123,14 @@ def register(reg_type):
             return "Try again"
         
     return render_template(f"reg{reg_type}.html")
+
+@app.route('/customer/<customername>', methods=['GET','POST'])
+def customerpage(customername):
+    return render_template("userhome.html", username=customername)
+
+@app.route('/company/<companyname>', methods=['GET','POST'])
+def companypage(companyname):
+    return render_template("companyhome.html", companyname=companyname)
 
 if __name__=="__main__":
     app.run(debug=True)
