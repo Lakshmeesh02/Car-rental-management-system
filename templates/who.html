@@ -4,12 +4,10 @@
     </head>
     <body>
         Register as:
-        <a href="{{ url_for('register',reg_type='admin') }}"> Admin</a>
         <a href="{{ url_for('register',reg_type='user') }}"> User</a>
         <a href="{{ url_for('register',reg_type='company') }}"> Company</a>
 
         Login as:
-        <a href="{{ url_for('creds',login_type='admin') }}">Admin</a>
         <a href="{{ url_for('creds', login_type='user') }}">User</a>
         <a href="{{ url_for('creds', login_type='company') }}">Company</a>
     </body>
