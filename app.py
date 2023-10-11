@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request, redirect, url_for
+from flask import Flask, render_template,request, redirect, url_for, flash
 import mysql.connector
 
 app=Flask(__name__)
@@ -42,13 +42,12 @@ def creds(login_type):
         validate_data=(username,password)
         cursor.execute(validate,validate_data)
         existing_company=cursor.fetchone()
-        print(existing_company)
         cursor.close()
         connection.close()
         if not existing_company:
             return "Invalid credentials"
         else:
-            return redirect(url_for("companypage",companyname=username))
+            return redirect(url_for("companypage",companyname=username,company_id=existing_company[0]))
             
     return render_template(f"askcred{login_type}.html")
 
@@ -101,6 +100,7 @@ def register(reg_type):
         check_data=(name,)
         cursor.execute(check,check_data)
         existing_companies=cursor.fetchone()
+        print(existing_companies)
         if existing_companies:
             cursor.close()
             connection.close()
@@ -128,8 +128,22 @@ def register(reg_type):
 def customerpage(customername):
     return render_template("userhome.html", username=customername)
 
-@app.route('/company/<companyname>', methods=['GET','POST'])
-def companypage(companyname):
+@app.route('/company/<companyname>/<int:company_id>', methods=['GET','POST'])
+def companypage(companyname,company_id):
+    if request.method=="POST":
+        carname=request.form.get("carname")
+        price_per_day=request.form.get("price_per_day")
+        availability="Y"
+
+        connection=create_sql_connection()
+        cursor=connection.cursor()
+        query="insert into cars (name,company_id,price_per_day,availability) values (%s,%s,%s,%s)"
+        data=(carname,company_id,price_per_day,availability)
+        cursor.execute(query,data)
+        connection.commit()
+        cursor.close()
+        connection.close()
+
     return render_template("companyhome.html", companyname=companyname)
 
 if __name__=="__main__":
