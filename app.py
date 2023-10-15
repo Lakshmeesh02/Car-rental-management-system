@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request, redirect, url_for, flash
+from flask import Flask, render_template,request, redirect, url_for
 import mysql.connector
 
 app=Flask(__name__)
@@ -133,16 +133,68 @@ def companypage(companyname,company_id):
     if request.method=="POST":
         carname=request.form.get("carname")
         price_per_day=request.form.get("price_per_day")
-        availability="Y"
+        action=request.form.get("action")
+        limit=request.form.get("limit")
 
-        connection=create_sql_connection()
-        cursor=connection.cursor()
-        query="insert into cars (name,company_id,price_per_day,availability) values (%s,%s,%s,%s)"
-        data=(carname,company_id,price_per_day,availability)
-        cursor.execute(query,data)
-        connection.commit()
-        cursor.close()
-        connection.close()
+        if action=="add":
+            if not price_per_day:
+                return "Price per day required to perform this action"
+            connection=create_sql_connection()
+            cursor=connection.cursor()
+            check="select car_id, car_count, available from cars where name=%s and company_id=%s"
+            data=(carname,company_id)
+            cursor.execute(check,data)
+            existing_car=cursor.fetchone()
+            if not existing_car:
+                query="insert into cars (name,company_id,price_per_day,car_count,available) values (%s,%s,%s,%s,%s)"
+                data=(carname,company_id,price_per_day,limit,limit)
+                cursor.execute(query,data)
+                connection.commit()
+                cursor.close()
+                connection.close()
+                return "Car added successfully."
+            else:
+                print(existing_car)
+                car_id=existing_car[0]
+                car_count=existing_car[1]+int(limit)
+                available=existing_car[2]+int(limit)
+                query="update cars set price_per_day=%s, car_count=%s, available=%s where car_id=%s and company_id=%s"
+                data=(price_per_day,car_count,available,car_id,company_id)
+                cursor.execute(query,data)
+                connection.commit()
+                cursor.close()
+                connection.close()
+                return "updated info successfully"
+
+        elif action=="remove":
+            if not carname or not limit:
+                return "Carname and limit field necessary to perform this action"
+            connection=create_sql_connection()
+            cursor=connection.cursor()
+            check="select car_id, car_count, available from cars where name=%s and company_id=%s"
+            data=(carname,company_id)
+            cursor.execute(check,data)
+            existing_car=cursor.fetchone()
+            car_id=existing_car[0]
+            car_count=existing_car[1]-int(limit)
+            available=existing_car[2]-int(limit)
+            if car_count<0:
+                return "Invalid limit set"
+            elif car_count==0:
+                query="delete from cars where name=%s and company_id=%s"
+                data=(carname,company_id)
+                cursor.execute(query,data)
+                connection.commit()
+                cursor.close()
+                connection.close()
+                return "Car removed successfully"
+            query="update cars set car_count=%s, available=%s where car_id=%s and company_id=%s"
+            data=(car_count,available,car_id,company_id)
+            cursor.execute(query,data)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            return "Car removed successfully"
 
     return render_template("companyhome.html", companyname=companyname)
 
