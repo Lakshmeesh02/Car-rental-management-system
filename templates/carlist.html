@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>cars({{company_id}})</title>
+    </head>
+    <body>
+        Your Car collection:
+        <table>
+            <thead>
+                <tr>
+                    <th>Car_id</th>
+                    <th>Name</th>
+                    <th>Price_per_day</th>
+                    <th>Count</th>
+                    <th>Available</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for car in cars %}
+                <tr>
+                    <td>{{ car[0] }}</td>
+                    <td>{{ car[1] }}</td>
+                    <td>{{ car[2] }}</td>
+                    <td>{{ car[3] }}</td>
+                    <td>{{ car[4] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
