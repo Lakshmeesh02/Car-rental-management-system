@@ -196,7 +196,20 @@ def companypage(companyname,company_id):
             connection.close()
             return "Car removed successfully"
 
-    return render_template("companyhome.html", companyname=companyname)
+    return render_template("companyhome.html", companyname=companyname,company_id=company_id)
+
+@app.route('/company/<int:company_id>/cars',methods=['GET'])
+def company_cars(company_id):
+    connection=create_sql_connection()
+    cursor=connection.cursor()
+    query="select car_id, name, price_per_day, car_count, available from cars where company_id=%s"
+    data=(company_id,)
+    cursor.execute(query,data)
+    cars=cursor.fetchall()
+    cursor.close()
+    connection.close()
+    print(cars)
+    return render_template("carlist.html",company_id=company_id,cars=cars)
 
 if __name__=="__main__":
     app.run(debug=True)
