@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>
+            Available cars
+        </title>
+    </head>
+    <body>
+        Cars in {{ location }}
+        <table>
+            <thead>
+                <tr>
+                    <th>company_id</th>
+                    <th>company_name</th>
+                    <th>company_contact</th>
+                    <th>company_location</th>
+                    <th>car_id</th>
+                    <th>car_name</th>
+                    <th>price_per_day</th>
+                    <th>available</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for car in results %}
+                <tr>
+                    <td>{{ car[0] }}</td>
+                    <td>{{ car[1] }}</td>
+                    <td>{{ car[2] }}</td>
+                    <td>{{ car[3] }}</td>
+                    <td>{{ car[4] }}</td>
+                    <td>{{ car[5] }}</td>
+                    <td>{{ car[6] }}</td>
+                    <td>{{ car[7] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
