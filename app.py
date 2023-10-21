@@ -47,8 +47,7 @@ def creds(login_type):
         if not existing_company:
             return "Invalid credentials"
         else:
-            return redirect(url_for("companypage",companyname=username,company_id=existing_company[0]))
-            
+            return redirect(url_for("companypage",companyname=username,company_id=existing_company[0]))       
     return render_template(f"askcred{login_type}.html")
 
 @app.route('/register/<reg_type>', methods=['GET','POST'])
@@ -121,12 +120,28 @@ def register(reg_type):
             cursor.close()
             connection.close()
             return "Try again"
-        
     return render_template(f"reg{reg_type}.html")
 
 @app.route('/customer/<customername>', methods=['GET','POST'])
 def customerpage(customername):
+    if request.method=='POST':
+        location=request.form.get("location")
+        return redirect(url_for("viewcars",location=location))
     return render_template("userhome.html", username=customername)
+
+@app.route('/availablecars/<location>',methods=['GET','POST'])
+def viewcars(location):
+    connection=create_sql_connection()
+    cursor=connection.cursor()
+    query="""select c.company_id, c.name, c.contact, c.location, cars.car_id, cars.name, cars.price_per_day, cars.available
+    from companies as c
+    inner join cars on cars.company_id=c.company_id 
+    where substring_index(c.location,',',-1) = %s;"""
+    cursor.execute(query,(location,))
+    results=cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template("searchcars.html", results=results, location=location)
 
 @app.route('/company/<companyname>/<int:company_id>', methods=['GET','POST'])
 def companypage(companyname,company_id):
@@ -195,7 +210,6 @@ def companypage(companyname,company_id):
             cursor.close()
             connection.close()
             return "Car removed successfully"
-
     return render_template("companyhome.html", companyname=companyname,company_id=company_id)
 
 @app.route('/company/<int:company_id>/cars',methods=['GET'])
@@ -211,5 +225,17 @@ def company_cars(company_id):
     print(cars)
     return render_template("carlist.html",company_id=company_id,cars=cars)
 
+@app.route('/reserve/customer/<int:customer_id>',methods=['GET','POST'])
+def reserve(customer_id):
+    if request.method=='POST':
+        companyid=request.form.get("companyid")
+        carid=request.form.get("carid")
+        carcount=request.form.get("carcount")
+        pickupdate=request.form.get("pickupdate")
+        returndate=request.form.get("returndate")
+        connection=create_sql_connection()
+        cursor=connection.cursor()
+        query="insert into reservations (customer_id,company_id, price, pickup_date, return_date, car_id, car_count) values (%s, %s, %s, %s, %s, %s, %s, %s)"
+        data=(customer_id,companyid,price,pickupdate,returndate,carid,carcount)
 if __name__=="__main__":
     app.run(debug=True)
