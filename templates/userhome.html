@@ -4,8 +4,10 @@
     </head>
     <body>
         Welcome {{ username }}
-            <form action="" method="POST">
-            book a car based on location <input type="text" id="location" name="location"> date<input type="text" id="date" name="date">
+        <form action="{{ url_for('customerpage', customername=username) }}" method="POST">
+            View available cars in your location:
+            Location(city)<input type="text" id="location" name="location" required>
+            <input type="submit" value="submit">
         </form>
         <a href="">view history</a>
     </body>
