@@ -31,7 +31,7 @@ def creds(login_type):
         if not existing_user:
             return "Invalid credentials"
         else:
-           return redirect(url_for('customerpage',customername=username))
+           return redirect(url_for("customerpage",customername=username,customer_id=existing_user[0]))
         
     if request.method=="POST" and login_type=="company":
         username=request.form.get('cusername')
@@ -122,12 +122,12 @@ def register(reg_type):
             return "Try again"
     return render_template(f"reg{reg_type}.html")
 
-@app.route('/customer/<customername>', methods=['GET','POST'])
-def customerpage(customername):
+@app.route('/customer/<customername>/<int:customer_id>', methods=['GET','POST'])
+def customerpage(customername,customer_id):
     if request.method=='POST':
         location=request.form.get("location")
         return redirect(url_for("viewcars",location=location))
-    return render_template("userhome.html", username=customername)
+    return render_template("userhome.html", username=customername, customer_id=customer_id)
 
 @app.route('/availablecars/<location>',methods=['GET','POST'])
 def viewcars(location):
@@ -142,6 +142,21 @@ def viewcars(location):
     cursor.close()
     connection.close()
     return render_template("searchcars.html", results=results, location=location)
+
+@app.route('/reserve/<customername>/<int:customer_id>',methods=['GET','POST'])
+def reserve(customername,customer_id):
+    if request.method=='POST':
+        companyid=request.form.get("companyid")
+        carid=request.form.get("carid")
+        carcount=request.form.get("carcount")
+        pickupdate=request.form.get("pickupdate")
+        returndate=request.form.get("returndate")
+        connection=create_sql_connection()
+        cursor=connection.cursor()
+        query="insert into reservations (customer_id,company_id, price, pickup_date, return_date, car_id, car_count) values (%s, %s, %s, %s, %s, %s, %s, %s)"
+        data=(customer_id,companyid,price,pickupdate,returndate,carid,carcount)
+        return "Car booked successfully!"
+    return render_template("reservecars.html", customer_id=customer_id)
 
 @app.route('/company/<companyname>/<int:company_id>', methods=['GET','POST'])
 def companypage(companyname,company_id):
@@ -225,17 +240,5 @@ def company_cars(company_id):
     print(cars)
     return render_template("carlist.html",company_id=company_id,cars=cars)
 
-@app.route('/reserve/customer/<int:customer_id>',methods=['GET','POST'])
-def reserve(customer_id):
-    if request.method=='POST':
-        companyid=request.form.get("companyid")
-        carid=request.form.get("carid")
-        carcount=request.form.get("carcount")
-        pickupdate=request.form.get("pickupdate")
-        returndate=request.form.get("returndate")
-        connection=create_sql_connection()
-        cursor=connection.cursor()
-        query="insert into reservations (customer_id,company_id, price, pickup_date, return_date, car_id, car_count) values (%s, %s, %s, %s, %s, %s, %s, %s)"
-        data=(customer_id,companyid,price,pickupdate,returndate,carid,carcount)
 if __name__=="__main__":
     app.run(debug=True)
