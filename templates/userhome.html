@@ -1,14 +1,15 @@
 <html>
     <head>
-        <title>User</title>
+        <title>User {{ customer_id }}</title>
     </head>
     <body>
         Welcome {{ username }}
-        <form action="{{ url_for('customerpage', customername=username) }}" method="POST">
+        <form action="{{ url_for('customerpage', customername=username, customer_id=customer_id) }}" method="POST">
             View available cars in your location:
             Location(city)<input type="text" id="location" name="location" required>
             <input type="submit" value="submit">
         </form>
+        <a href="{{ url_for('reserve', customername=username, customer_id=customer_id) }}">Book a car:</a>
         <a href="">view history</a>
     </body>
 </html>
