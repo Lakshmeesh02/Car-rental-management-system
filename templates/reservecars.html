@@ -3,12 +3,13 @@
         <title>Reservation {{ customer_id }}</title>
     </head>
     <body>
+        Welcome {{ customername }}
         <form action="{{ url_for('reserve',customername=customername,customer_id=customer_id) }}" method="POST">
             company_id<input type="number" id="company_id" name="companyid" required>
             car_id<input type="number" id="carid" name="carid" required>
             car_count<input type="number" id="carcount" name="carcount" required>
-            pickup date<input type="text" id="pickupdate" name="pickupdate" required>
-            return date<input type="text" id="returndate" name="returndate" required>
+            pickup date(dd-mm-yy)<input type="text" id="pickupdate" name="pickupdate" required>
+            return date(dd-mm-yy)<input type="text" id="returndate" name="returndate" required>
             <input type="submit" value="submit">
         </form>
     </body>
