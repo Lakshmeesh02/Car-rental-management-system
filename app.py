@@ -1,5 +1,6 @@
 from flask import Flask, render_template,request, redirect, url_for
 import mysql.connector
+from datetime import datetime
 
 app=Flask(__name__)
 
@@ -146,17 +147,54 @@ def viewcars(location):
 @app.route('/reserve/<customername>/<int:customer_id>',methods=['GET','POST'])
 def reserve(customername,customer_id):
     if request.method=='POST':
-        companyid=request.form.get("companyid")
-        carid=request.form.get("carid")
-        carcount=request.form.get("carcount")
+        companyid=int(request.form.get("companyid"))
+        carid=int(request.form.get("carid"))
+        carcount=int(request.form.get("carcount"))
         pickupdate=request.form.get("pickupdate")
         returndate=request.form.get("returndate")
+        pickup_date=datetime.strptime(pickupdate,'%d-%m-%Y')
+        return_date=datetime.strptime(returndate,'%d-%m-%Y')
+        if return_date<pickup_date:
+            return "Enter valid dates"
+        print(pickup_date,return_date)
+        total_days=(return_date-pickup_date).days
         connection=create_sql_connection()
         cursor=connection.cursor()
-        query="insert into reservations (customer_id,company_id, price, pickup_date, return_date, car_id, car_count) values (%s, %s, %s, %s, %s, %s, %s, %s)"
-        data=(customer_id,companyid,price,pickupdate,returndate,carid,carcount)
-        return "Car booked successfully!"
-    return render_template("reservecars.html", customer_id=customer_id)
+        check_car_exists="select car_id from cars where car_id=%s and company_id=%s"
+        check_car_exists_data=(carid,companyid)
+        cursor.execute(check_car_exists,check_car_exists_data)
+        results=cursor.fetchall()
+        print(results)
+        if len(results)>1:
+            return "Request redundant"
+        check_availability="select available from cars where car_id=%s"
+        check_availability_data=(carid,)
+        cursor.execute(check_availability,check_availability_data)
+        available_cars=cursor.fetchall()
+        print(available_cars)
+        if carcount>available_cars[0][0]:
+            return "Hold on, have some limit"
+        calc_price="select price_per_day*%s*%s from cars where car_id=%s"
+        calc_price_data=(carcount,total_days,carid)
+        cursor.execute(calc_price,calc_price_data)
+        price=cursor.fetchall()[0][0]
+        print(price)
+        insert_reservation="insert into reservations (customer_id,company_id, price, pickup_date, return_date, car_id, car_count) values (%s, %s, %s, %s, %s, %s, %s)"
+        insert_reservation_data=(customer_id,companyid,price,pickup_date,return_date,carid,carcount)
+        cursor.execute(insert_reservation,insert_reservation_data)
+        connection.commit()
+        modify_available="update cars set available=available-%s where car_id=%s"
+        modify_available_data=(carcount,carid)
+        cursor.execute(modify_available,modify_available_data)
+        connection.commit()
+        cursor.close()
+        connection.close()
+        return f"Car booked successfully and price to pay(on pickup)={price}!"
+    return render_template("reservecars.html", customer_id=customer_id, customername=customername)
+
+'''@app.route('/customer/<int: customer_id>/history',methods=['GET'])
+def user_history(customer_id):'''
+
 
 @app.route('/company/<companyname>/<int:company_id>', methods=['GET','POST'])
 def companypage(companyname,company_id):
