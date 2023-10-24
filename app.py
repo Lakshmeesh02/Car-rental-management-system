@@ -192,9 +192,18 @@ def reserve(customername,customer_id):
         return f"Car booked successfully and price to pay(on pickup)={price}!"
     return render_template("reservecars.html", customer_id=customer_id, customername=customername)
 
-'''@app.route('/customer/<int: customer_id>/history',methods=['GET'])
-def user_history(customer_id):'''
-
+@app.route('/customer/<customername>/<int:customer_id>/history',methods=['GET'])
+def user_history(customername,customer_id):
+    connection=create_sql_connection()
+    cursor=connection.cursor()
+    query="select id, company_id, price, pickup_date, return_date, car_id, car_count from reservations where customer_id=%s"
+    data=(customer_id,)
+    cursor.execute(query,data)
+    reservations=cursor.fetchall()
+    cursor.close()
+    connection.close()
+    print(reservations)
+    return render_template("userhistory.html", reservations=reservations, customername=customername)
 
 @app.route('/company/<companyname>/<int:company_id>', methods=['GET','POST'])
 def companypage(companyname,company_id):
