@@ -100,7 +100,6 @@ def register(reg_type):
         check_data=(name,)
         cursor.execute(check,check_data)
         existing_companies=cursor.fetchone()
-        print(existing_companies)
         if existing_companies:
             cursor.close()
             connection.close()
@@ -156,7 +155,6 @@ def reserve(customername,customer_id):
         return_date=datetime.strptime(returndate,'%d-%m-%Y')
         if return_date<pickup_date:
             return "Enter valid dates"
-        print(pickup_date,return_date)
         total_days=(return_date-pickup_date).days
         connection=create_sql_connection()
         cursor=connection.cursor()
@@ -164,21 +162,18 @@ def reserve(customername,customer_id):
         check_car_exists_data=(carid,companyid)
         cursor.execute(check_car_exists,check_car_exists_data)
         results=cursor.fetchall()
-        print(results)
         if len(results)>1:
             return "Request redundant"
         check_availability="select available from cars where car_id=%s"
         check_availability_data=(carid,)
         cursor.execute(check_availability,check_availability_data)
         available_cars=cursor.fetchall()
-        print(available_cars)
         if carcount>available_cars[0][0]:
             return "Hold on, have some limit"
         calc_price="select price_per_day*%s*%s from cars where car_id=%s"
         calc_price_data=(carcount,total_days,carid)
         cursor.execute(calc_price,calc_price_data)
         price=cursor.fetchall()[0][0]
-        print(price)
         insert_reservation="insert into reservations (customer_id,company_id, price, pickup_date, return_date, car_id, car_count) values (%s, %s, %s, %s, %s, %s, %s)"
         insert_reservation_data=(customer_id,companyid,price,pickup_date,return_date,carid,carcount)
         cursor.execute(insert_reservation,insert_reservation_data)
@@ -202,7 +197,6 @@ def user_history(customername,customer_id):
     reservations=cursor.fetchall()
     cursor.close()
     connection.close()
-    print(reservations)
     return render_template("userhistory.html", reservations=reservations, customername=customername)
 
 @app.route('/company/<companyname>/<int:company_id>', methods=['GET','POST'])
@@ -231,7 +225,6 @@ def companypage(companyname,company_id):
                 connection.close()
                 return "Car added successfully."
             else:
-                print(existing_car)
                 car_id=existing_car[0]
                 car_count=existing_car[1]+int(limit)
                 available=existing_car[2]+int(limit)
@@ -284,7 +277,6 @@ def company_cars(company_id):
     cars=cursor.fetchall()
     cursor.close()
     connection.close()
-    print(cars)
     return render_template("carlist.html",company_id=company_id,cars=cars)
 
 if __name__=="__main__":
