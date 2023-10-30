@@ -279,5 +279,18 @@ def company_cars(company_id):
     connection.close()
     return render_template("carlist.html",company_id=company_id,cars=cars)
 
+@app.route('/company/bookings/<int:company_id>',methods=['GET'])
+def bookings(company_id):
+    connection=create_sql_connection()
+    cursor=connection.cursor()
+    query="select * from reservations where company_id=%s"
+    data=(company_id,)
+    cursor.execute(query,data)
+    reserves=cursor.fetchall()
+    reserves=reserves[::-1]
+    cursor.close()
+    connection.close()
+    return render_template("companybookings.html",reserves=reserves,company_id=company_id)
+
 if __name__=="__main__":
     app.run(debug=True)
