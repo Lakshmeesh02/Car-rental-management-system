@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <title>Bookings for you {{ company_id }}</title>
+    </head>
+    <body>
+        Reservations for you:
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>customer id</th>
+                    <th>car id</th>
+                    <th>car count</th>
+                    <th>price</th>
+                    <th>pickup date</th>
+                    <th>return date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserve in reserves %}
+                <tr>
+                    <td>{{ reserve[0] }}</td>
+                    <td>{{ reserve[1] }}</td>
+                    <td>{{ reserve[6] }}</td>
+                    <td>{{ reserve[7] }}</td>
+                    <td>{{ reserve[3] }}</td>
+                    <td>{{ reserve[4] }}</td>
+                    <td>{{ reserve[5] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>
