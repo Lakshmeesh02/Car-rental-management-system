@@ -13,10 +13,10 @@
                 <option value="add">Add car</option>
                 <option value="remove">Remove car</option>
             </select>
+            <input type="submit" value="submit">
 
             <a href="{{ url_for('company_cars',company_id=company_id) }}"> View your collection</a>
-
-            <input type="submit" value="submit">
+            <a href="{{ url_for('bookings',company_id=company_id) }}">View reservations for your company</a>
         </form>
     </body>
 </html>
