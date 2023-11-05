@@ -151,10 +151,19 @@ def reserve(customername,customer_id):
         carcount=int(request.form.get("carcount"))
         pickupdate=request.form.get("pickupdate")
         returndate=request.form.get("returndate")
-        pickup_date=datetime.strptime(pickupdate,'%d-%m-%Y')
-        return_date=datetime.strptime(returndate,'%d-%m-%Y')
+        try:
+            pickup_date=datetime.strptime(pickupdate,'%d-%m-%Y')
+            return_date=datetime.strptime(returndate,'%d-%m-%Y')
+        except ValueError:
+            return "Enter valid dates"
+        if not(companyid>0):
+            return "Invalid company_id"
+        if not(carid>0):
+            return "Invalid car id"
         if return_date<pickup_date:
             return "Enter valid dates"
+        if not(carcount>0):
+            return "Invalid car count"
         total_days=(return_date-pickup_date).days
         connection=create_sql_connection()
         cursor=connection.cursor()
@@ -208,8 +217,8 @@ def companypage(companyname,company_id):
         limit=request.form.get("limit")
 
         if action=="add":
-            if not price_per_day:
-                return "Price per day required to perform this action"
+            if not price_per_day or price_per_day<0:
+                return "Price per day required and needs to be valid"
             connection=create_sql_connection()
             cursor=connection.cursor()
             check="select car_id, car_count, available from cars where name=%s and company_id=%s"
