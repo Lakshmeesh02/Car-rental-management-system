@@ -8,15 +8,11 @@
             Car Name<input type="text" name="carname" id="carname" required>
             Price per day<input type="number" name="price_per_day" id="price_per_day" required>
             Number of cars to add/remove<input type="number" name="limit" id="limit" required>
-            Select action:
-            <select id="action" name="action" required>
-                <option value="add">Add car</option>
-                <option value="remove">Remove car</option>
-            </select>
             <input type="submit" value="submit">
 
             <a href="{{ url_for('company_cars',company_id=company_id) }}"> View your collection</a>
             <a href="{{ url_for('bookings',company_id=company_id) }}">View reservations for your company</a>
+            <a href="/">logout</a>
         </form>
     </body>
 </html>
