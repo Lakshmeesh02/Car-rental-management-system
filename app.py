@@ -2,7 +2,7 @@ from flask import Flask, render_template,request, redirect, url_for
 import mysql.connector
 from datetime import datetime
 
-app=Flask(__name__)
+app=Flask(__name__,static_folder='static')
 
 def create_sql_connection():
     return mysql.connector.connect(
@@ -21,6 +21,7 @@ def creds(login_type):
     if request.method=="POST" and login_type=="user":
         username=request.form.get('username')
         password=request.form.get('password')
+        print(username,password)
         connection=create_sql_connection()
         cursor=connection.cursor()
         validate="select customer_id from customers where username=%s and password=%s"
