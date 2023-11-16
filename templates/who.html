@@ -1,13 +1,78 @@
-<html>
-    <head>
-        <title>Who are you?</title>
-    </head>
-    <body>
-        Register as:
-        <a href="{{ url_for('register',reg_type='user') }}"> User</a>
-        <a href="{{ url_for('register',reg_type='company') }}"> Company</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Who are you?</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Register or Login</h1>
+        <div class="registration">
+            <a href="{{ url_for('register', reg_type='user') }}">Register as User</a>
+            <a href="{{ url_for('register', reg_type='company') }}">Register as Company</a>
+        </div>
+        <div class="login">
+            <a href="{{ url_for('creds', login_type='user') }}">Login as User</a>
+            <a href="{{ url_for('creds', login_type='company') }}">Login as Company</a>
+        </div>
+    </div>
+</body>
+</html>
 
-        Login as:
-        <a href="{{ url_for('creds', login_type='user') }}">User</a>
-        <a href="{{ url_for('creds', login_type='company') }}">Company</a>
-    </body>
+<style>
+    /* Reset default margin, padding, and box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Apply background image or color as needed */
+body {
+    background: url("/static/background.jpeg") no-repeat center center fixed; /* Background image */
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    padding: 20px;
+    text-align: center;
+    max-width: 400px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.registration a, .login a {
+    text-decoration: none;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 18px;
+    background: #007BFF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.registration a:hover, .login a:hover {
+    background: #0056b3;
+}
+
+.registration, .login {
+    display: flex;
+    flex-direction: column;
+}
+
+</style>

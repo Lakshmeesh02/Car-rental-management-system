@@ -1,20 +1,21 @@
-<html>
-    <head>
-        <title>History
-        </title>
-    </head>
-    <body>
-        {{ customername }}'s history:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>History</title>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ customername }}'s History</h1>
         <table>
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Company_id</th>
-                    <th>car id</th>
-                    <th>car count</th>
-                    <th>price</th>
-                    <th>pickup date</th>
-                    <th>return date</th>
+                    <th>Company ID</th>
+                    <th>Car ID</th>
+                    <th>Car Count</th>
+                    <th>Price</th>
+                    <th>Pickup Date</th>
+                    <th>Return Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,5 +32,72 @@
                 {% endfor %}
             </tbody>
         </table>
-    </body>
+    </div>
+</body>
 </html>
+
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+  }
+  
+  body {
+      background: url("/static/background.jpeg"); /* Background image */
+      background-size: cover;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+  }
+  
+  .container {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(9px);
+      -webkit-backdrop-filter: blur(9px);
+      padding: 20px;
+      text-align: center;
+      width: 80%;
+      max-width: 800px;
+  }
+  
+  table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+  }
+  
+  table, th, td {
+      border: 1px solid #ccc;
+  }
+  
+  th, td {
+      padding: 10px;
+      text-align: center;
+  }
+  
+  th {
+      background-color: #333;
+      color: white;
+  }
+  
+  tr:nth-child(even) {
+      background-color: #f2f2f2;
+  }
+  
+  tr:nth-child(odd) {
+      background-color: #fff;
+  }
+  
+  h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+  }
+  
+  </style>

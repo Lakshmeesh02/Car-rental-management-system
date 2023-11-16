@@ -1,12 +1,116 @@
-<html>
-    <head>
-        <title>Credentials</title>
-    </head>
-    <body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Credentials</title>
+</head>
+<body>
+    <div class="container">
         <form action="/askcred/company" method="post">
-        Company username:<input type="text" id="cusername" name="cusername" required>
-        Company password:<input type="text" id="cpassword" name="cpassword" required>
-        <input type="submit" value="submit">
+            <h2>Login</h2>
+            <div class="input-field">
+                <label for="cusername">Company username</label>
+                <input type="text" id="cusername" name="cusername" required>
+            </div>
+            <div class="input-field">
+                <label for="cpassword">Company password</label>
+                <input type="text" id="cpassword" name="cpassword" required>
+            </div>
+            <button type="submit">Login</button>
         </form>
-    </body>
+    </div>
+</body>
 </html>
+
+
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    background: url("/static/background.jpeg") no-repeat center center fixed;
+    background-size: cover;
+    background-color: rgba(250, 250, 250, 0.7);
+    background-blend-mode: multiply;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    padding: 30px;
+    text-align: center;
+    width: 400px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.input-field {
+    position: relative;
+    border-bottom: 2px solid #ccc;
+    margin: 15px 0;
+}
+
+label {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    font-size: 16px;
+    pointer-events: none;
+    transition: 0.5s ease-in-out;
+}
+
+input {
+    width: 100%;
+    height: 40px;
+    background: transparent;
+    outline: none;
+    border: none;
+    font-size: 16px;
+    color: #fff;
+}
+
+input:focus ~ label, input:valid ~ label {
+    font-size: 0.8rem;
+    top: 10px;
+    transform: translateY(-120%);
+}
+
+button {
+    background: #fff;
+    color: #000;
+    border: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 20px;
+    border-radius: 3px;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+button:hover {
+    color: #fff;
+    border-color: #fff;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+</style>

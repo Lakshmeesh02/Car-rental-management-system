@@ -1,18 +1,110 @@
-<html>
-    <head>
-        <title>Welcome</title>
-    </head>
-    <body>
-        Welcome {{companyname}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Welcome</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome {{companyname}}</h1>
         <form method="POST" action="">
-            Car Name<input type="text" name="carname" id="carname" required>
-            Price per day<input type="number" name="price_per_day" id="price_per_day" required>
-            Number of cars to add/remove<input type="number" name="limit" id="limit" required>
-            <input type="submit" value="submit">
-
-            <a href="{{ url_for('company_cars',company_id=company_id) }}"> View your collection</a>
-            <a href="{{ url_for('bookings',company_id=company_id) }}">View reservations for your company</a>
-            <a href="/">logout</a>
+            <div class="input-field">
+                <label for="carname">Car Name</label>
+                <input type="text" name="carname" id="carname" required>
+            </div>
+            <div class="input-field">
+                <label for="price_per_day">Price per day</label>
+                <input type="number" name="price_per_day" id="price_per_day" required>
+            </div>
+            <div class="input-field">
+                <label for="limit">Number of cars to add</label>
+                <input type="number" name="limit" id="limit" required>
+            </div>
+            <button type="submit">Submit</button>
+            <a href="{{ url_for('company_cars', company_id=company_id) }}">View your collection</a>
+            <a href="{{ url_for('bookings', company_id=company_id) }}">View reservations for your company</a>
+            <a href="/">Logout</a>
         </form>
-    </body>
+    </div>
+</body>
 </html>
+
+
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: url("/static/background.jpeg") no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(9px);
+    padding: 20px;
+    text-align: center;
+    max-width: 400px;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.input-field {
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+label {
+    font-size: 16px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+a {
+    display: block;
+    text-align: center;
+    margin: 10px 0;
+    text-decoration: none;
+    color: #007BFF;
+}
+
+button {
+    background: #fff;
+    color: #000;
+    border: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 20px;
+    border-radius: 3px;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+button:hover {
+    color: #fff;
+    border-color: #fff;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+</style>

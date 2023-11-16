@@ -1,34 +1,72 @@
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Bookings for you {{ company_id }}</title>
-    </head>
-    <body>
-        Reservations for you:
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>customer id</th>
-                    <th>car id</th>
-                    <th>car count</th>
-                    <th>price</th>
-                    <th>pickup date</th>
-                    <th>return date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for reserve in reserves %}
-                <tr>
-                    <td>{{ reserve[0] }}</td>
-                    <td>{{ reserve[1] }}</td>
-                    <td>{{ reserve[6] }}</td>
-                    <td>{{ reserve[7] }}</td>
-                    <td>{{ reserve[3] }}</td>
-                    <td>{{ reserve[4] }}</td>
-                    <td>{{ reserve[5] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </body>
+<head>
+    <title>Bookings for you {{ company_id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reservations for You:</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Customer ID</th>
+                <th>Car ID</th>
+                <th>Car Count</th>
+                <th>Price</th>
+                <th>Pickup Date</th>
+                <th>Return Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reserve in reserves %}
+            <tr>
+                <td>{{ reserve[0] }}</td>
+                <td>{{ reserve[1] }}</td>
+                <td>{{ reserve[6] }}</td>
+                <td>{{ reserve[7] }}</td>
+                <td>{{ reserve[3] }}</td>
+                <td>{{ reserve[4] }}</td>
+                <td>{{ reserve[5] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
 </html>

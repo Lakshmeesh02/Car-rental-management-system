@@ -1,15 +1,17 @@
-<html>
-    <head>
-        <title>cars({{company_id}})</title>
-    </head>
-    <body>
-        Your Car collection:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>cars({{company_id}})</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Car Collection</h1>
         <table>
             <thead>
                 <tr>
-                    <th>Car_id</th>
+                    <th>Car ID</th>
                     <th>Name</th>
-                    <th>Price_per_day</th>
+                    <th>Price per Day</th>
                     <th>Count</th>
                     <th>Available</th>
                 </tr>
@@ -26,5 +28,72 @@
                 {% endfor %}
             </tbody>
         </table>
-    </body>
+    </div>
+</body>
 </html>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: url("/static/background.jpeg"); /* Background image */
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    padding: 20px;
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background-color: #333;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+</style>

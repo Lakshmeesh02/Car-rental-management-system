@@ -1,16 +1,102 @@
-<html>
-    <head>
-        <title>User {{ customer_id }}</title>
-    </head>
-    <body>
-        Welcome {{ username }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>User {{ customer_id }}</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome {{ username }}</h1>
         <form action="{{ url_for('customerpage', customername=username, customer_id=customer_id) }}" method="POST">
-            View available cars in your location:
-            Location(city)<input type="text" id="location" name="location" required>
-            <input type="submit" value="submit">
+            <p>View available cars in your location:</p>
+            Location (city) <input type="text" id="location" name="location" required>
+            <button type="submit">Submit</button>
         </form>
-        <a href="{{ url_for('reserve', customername=username, customer_id=customer_id) }}">Book a car:</a>
-        <a href="{{ url_for('user_history',customername=username,customer_id=customer_id) }}">view history</a>
-        <a href="/">logout</a>
-    </body>
+        <a href="{{ url_for('reserve', customername=username, customer_id=customer_id) }}">Book a Car</a>
+        <a href="{{ url_for('user_history', customername=username, customer_id=customer_id) }}">View History</a>
+        <a href="/">Logout</a>
+    </div>
+</body>
 </html>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Apply background image */
+body {
+    background: url("/static/background.jpeg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Style for the container */
+.container {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    padding: 20px;
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+}
+
+/* Style for the header */
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* Style for input fields and labels */
+input, select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+label {
+    font-size: 16px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Style for links and buttons */
+a {
+    display: block;
+    text-align: center;
+    margin: 10px 0;
+    text-decoration: none;
+    color: #ffffff;
+}
+
+button {
+    background: #fff;
+    color: #000;
+    border: none;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 12px 20px;
+    border-radius: 3px;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+button:hover {
+    color: #fff;
+    border-color: #fff;
+    background: rgba(0, 0, 0, 0.2);
+}
+</style>
