@@ -13,6 +13,7 @@
         </form>
         <a href="{{ url_for('reserve', customername=username, customer_id=customer_id) }}">Book a Car</a>
         <a href="{{ url_for('user_history', customername=username, customer_id=customer_id) }}">View History</a>
+        <a href="{{ url_for('deleteaccount', customer_id=customer_id) }}">Delete account</a>
         <a href="/">Logout</a>
     </div>
 </body>
