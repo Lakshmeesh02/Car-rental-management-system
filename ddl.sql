@@ -49,3 +49,36 @@ constraint fkreservations2 foreign key (company_id) references companies(company
 constraint fkreservations3 foreign key (car_id) references cars(car_id) on delete cascade,
 constraint chk_car_count check((car_count>0))
 );
+
+-- Trigger to update available cars for a company when a customer who has reserved cars has deleted the account
+DELIMITER //
+CREATE TRIGGER before_delete_customer
+BEFORE DELETE ON customers
+FOR EACH ROW
+BEGIN
+    DECLARE car_id_var INT;
+    DECLARE car_count_var INT;
+    
+    SELECT car_id, car_count
+    INTO car_id_var, car_count_var
+    FROM reservations
+    WHERE customer_id = OLD.customer_id;
+
+    UPDATE cars
+    SET available = available + car_count_var
+    WHERE car_id = car_id_var;
+END;
+//
+DELIMITER ;
+
+
+--Procedure to update car_availability when cars are booked by customers
+DELIMITER //
+
+CREATE PROCEDURE sp_UpdateCarAvailability(IN p_car_id INT, IN p_count INT)
+BEGIN
+    UPDATE cars SET available = available - p_count WHERE car_id = p_car_id;
+END //
+
+DELIMITER ;
+
