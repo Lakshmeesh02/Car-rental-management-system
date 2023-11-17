@@ -188,9 +188,11 @@ def reserve(customername,customer_id):
         insert_reservation_data=(customer_id,companyid,price,pickup_date,return_date,carid,carcount)
         cursor.execute(insert_reservation,insert_reservation_data)
         connection.commit()
-        modify_available="update cars set available=available-%s where car_id=%s"
-        modify_available_data=(carcount,carid)
-        cursor.execute(modify_available,modify_available_data)
+        #modify_available="update cars set available=available-%s where car_id=%s"
+        #modify_available_data=(carcount,carid)
+        #cursor.execute(modify_available,modify_available_data)
+        #connection.commit()
+        cursor.callproc('sp_UpdateCarAvailability',(carid,carcount))
         connection.commit()
         cursor.close()
         connection.close()
@@ -208,6 +210,18 @@ def user_history(customername,customer_id):
     cursor.close()
     connection.close()
     return render_template("userhistory.html", reservations=reservations, customername=customername)
+
+@app.route('/delete_customer/<int:customer_id>',methods=['GET'])
+def deleteaccount(customer_id):
+    connection=create_sql_connection()
+    cursor=connection.cursor()
+    query="delete from customers where customer_id=%s"
+    data=(customer_id,)
+    cursor.execute(query,data)
+    connection.commit()
+    cursor.close()
+    connection.close()
+    return redirect(url_for('home'))
 
 @app.route('/company/<companyname>/<int:company_id>', methods=['GET','POST'])
 def companypage(companyname,company_id):
