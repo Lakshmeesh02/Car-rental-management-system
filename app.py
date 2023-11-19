@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request, redirect, url_for
+from flask import Flask, render_template,request, redirect, url_for, flash
 import mysql.connector
 from datetime import datetime
 
@@ -188,10 +188,6 @@ def reserve(customername,customer_id):
         insert_reservation_data=(customer_id,companyid,price,pickup_date,return_date,carid,carcount)
         cursor.execute(insert_reservation,insert_reservation_data)
         connection.commit()
-        #modify_available="update cars set available=available-%s where car_id=%s"
-        #modify_available_data=(carcount,carid)
-        #cursor.execute(modify_available,modify_available_data)
-        #connection.commit()
         cursor.callproc('sp_UpdateCarAvailability',(carid,carcount))
         connection.commit()
         cursor.close()
@@ -258,6 +254,19 @@ def companypage(companyname,company_id):
             connection.close()
             return "updated info successfully"
     return render_template("companyhome.html", companyname=companyname,company_id=company_id)
+
+@app.route('/company/<companyname>/<int:company_id>/stats', methods=['GET'])
+def companystats(companyname,company_id):
+    if request.method=='GET':
+        connection=create_sql_connection()
+        cursor=connection.cursor()
+        query="select count(car_id), avg(price_per_day), sum(available) from cars where company_id=%s"
+        data=(company_id,)
+        cursor.execute(query,data)
+        statistics=cursor.fetchone()
+        cursor.close()
+        connection.close()
+    return render_template("companystats.html",companyname=companyname,company_id=company_id,statistics=statistics)
 
 @app.route('/company/<int:company_id>/cars',methods=['GET'])
 def company_cars(company_id):
