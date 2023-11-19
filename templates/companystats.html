@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>Company statistics</title>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h2>Company Statistics</h2>
+            
+            <p>Number of different cars: {{ statistics[0] }}</p>
+            <p>Average Price per Day: {{ statistics[1] }}</p>
+            <p>Number of Available Cars: {{ statistics[2] }}</p>
+        </div>
+    </body>
+</html>
+
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: url("/static/background.jpeg") no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(9px);
+    padding: 20px;
+    text-align: center;
+    max-width: 400px;
+    color: yellow
+}
+</style>
