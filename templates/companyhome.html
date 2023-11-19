@@ -3,7 +3,7 @@
 <head>
     <title>Welcome</title>
 </head>
-<body>
+<body> 
     <div class="container">
         <h1>Welcome {{companyname}}</h1>
         <form method="POST" action="">
@@ -22,6 +22,7 @@
             <button type="submit">Submit</button>
             <a href="{{ url_for('company_cars', company_id=company_id) }}">View your collection</a>
             <a href="{{ url_for('bookings', company_id=company_id) }}">View reservations for your company</a>
+            <a href="{{ url_for('companystats', companyname=companyname, company_id=company_id) }}">View statistics</a>
             <a href="/">Logout</a>
         </form>
     </div>

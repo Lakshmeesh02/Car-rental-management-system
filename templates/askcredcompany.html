@@ -1,19 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <title>Credentials</title>
 </head>
 <body>
-    <div class="container">
+    <div class="wrapper">
         <form action="/askcred/company" method="post">
             <h2>Login</h2>
             <div class="input-field">
-                <label for="cusername">Company username</label>
                 <input type="text" id="cusername" name="cusername" required>
+                <label for="cusername">Company username</label>
             </div>
             <div class="input-field">
-                <label for="cpassword">Company password</label>
                 <input type="text" id="cpassword" name="cpassword" required>
+                <label for="cpassword">Company password</label>
             </div>
             <button type="submit">Login</button>
         </form>
@@ -42,7 +41,7 @@ body {
     margin: 0;
 }
 
-.container {
+.wrapper {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
