@@ -1,6 +1,8 @@
 from flask import Flask, render_template,request, redirect, url_for, flash
 import mysql.connector
 from datetime import datetime
+import plotly.express as px
+import pandas as pd
 
 app=Flask(__name__,static_folder='static')
 
@@ -274,13 +276,64 @@ def companystats(companyname,company_id):
     if request.method=='GET':
         connection=create_connection_companies()
         cursor=connection.cursor()
-        query="select count(car_id), avg(price_per_day), sum(available) from cars where company_id=%s"
+        query="""
+        select count(cars.car_id),
+        avg(price_per_day),
+        sum(available),
+        sum(reservations.price)
+        from cars left join reservations on cars.car_id=reservations.car_id 
+        where cars.company_id=%s
+        """
         data=(company_id,)
         cursor.execute(query,data)
         statistics=cursor.fetchone()
+
+        query="""
+        select cars.name, count(reservations.id) as rental_count
+        from cars left join reservations on cars.car_id=reservations.car_id
+        where cars.company_id=%s
+        group by cars.name
+        order by rental_count desc
+        limit 1
+        """
+        cursor.execute(query,data)
+        most_rented=cursor.fetchone()
+
+        query="""
+        select cars.name, count(reservations.id) as rental_count
+        from cars left join reservations on cars.car_id=reservations.car_id
+        where cars.company_id=%s
+        group by cars.name
+        order by rental_count asc
+        limit 1
+        """
+        cursor.execute(query,data)
+        least_rented=cursor.fetchone()
+
+        availability_pie="select sum(car_count) as count, available from cars where company_id=%s group by available"
+        cursor.execute(availability_pie,data)
+        availability_data=cursor.fetchall()
+        print(availability_data)
+
+        price_bar="select name, avg(price_per_day) as price_per_day from cars where company_id=%s group by name"
+        cursor.execute(price_bar,data)
+        price_data=cursor.fetchall()
         cursor.close()
         connection.close()
-    return render_template("companystats.html",companyname=companyname,company_id=company_id,statistics=statistics)
+
+        if availability_data:
+            total_cars, available_cars=availability_data[0]
+            percentage_available=(available_cars/total_cars)*100
+            data={'count':[percentage_available, 100-percentage_available], 'available':['Available','Unavailable']}
+            df=pd.DataFrame(data)
+            pie_chart=px.pie(df, names='available', values='count', title='Car availability distribution')
+            pie_html=pie_chart.to_html(full_html=False)
+        else:
+            pie_html = "No data available for car availability distribution."
+        df_price=pd.DataFrame(price_data, columns=['name','price_per_day'])
+        bar_graph=px.bar(df_price, x='name', y='price_per_day', title='price for each car')
+        bar_html=bar_graph.to_html(full_html=False)
+    return render_template("companystats.html",companyname=companyname,company_id=company_id,statistics=statistics, most_rented=most_rented, least_rented=least_rented, pie_html=pie_html, bar_html=bar_html)
 
 @app.route('/company/<int:company_id>/cars',methods=['GET'])
 def company_cars(company_id):
