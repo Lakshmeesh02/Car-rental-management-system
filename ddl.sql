@@ -89,6 +89,7 @@ create user 'companies'@'localhost' identified by 'companies123';
 grant select, insert, delete on carrent.customers to 'customers'@'localhost';
 grant select, update on carrent.cars to 'customers'@'localhost';
 grant select, insert on carrent.reservations to 'customers'@'localhost';
+grant execute on procedure carrent.sp_UpdateCarAvailability TO 'customers'@'localhost';
 grant select, insert, delete on carrent.companies to 'companies'@'localhost';
 grant select, insert, delete, update on carrent.cars to 'companies'@'localhost';
 grant select on carrent.reservations to 'companies'@'localhost';
