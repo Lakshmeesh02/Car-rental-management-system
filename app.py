@@ -12,6 +12,21 @@ def create_sql_connection():
         database="carrent"
     )
 
+def create_connection_customers():
+    return mysql.connector.connect(
+        host="localhost",
+        username="customers",
+        password="customers123",
+        database="carrent"
+    )
+
+def create_connection_companies():
+    return mysql.connector.connect(
+        host="localhost",
+        user="companies",
+        password="companies123",
+        database="carrent"
+    )
 @app.route('/')
 def home():
     return render_template("who.html")
@@ -21,7 +36,6 @@ def creds(login_type):
     if request.method=="POST" and login_type=="user":
         username=request.form.get('username')
         password=request.form.get('password')
-        print(username,password)
         connection=create_sql_connection()
         cursor=connection.cursor()
         validate="select customer_id from customers where username=%s and password=%s"
@@ -166,7 +180,7 @@ def reserve(customername,customer_id):
         if not(carcount>0):
             return "Invalid car count"
         total_days=(return_date-pickup_date).days
-        connection=create_sql_connection()
+        connection=create_connection_customers()
         cursor=connection.cursor()
         check_car_exists="select car_id from cars where car_id=%s and company_id=%s"
         check_car_exists_data=(carid,companyid)
@@ -197,7 +211,7 @@ def reserve(customername,customer_id):
 
 @app.route('/customer/<customername>/<int:customer_id>/history',methods=['GET'])
 def user_history(customername,customer_id):
-    connection=create_sql_connection()
+    connection=create_connection_customers()
     cursor=connection.cursor()
     query="select id, company_id, price, pickup_date, return_date, car_id, car_count from reservations where customer_id=%s"
     data=(customer_id,)
@@ -209,7 +223,7 @@ def user_history(customername,customer_id):
 
 @app.route('/delete_customer/<int:customer_id>',methods=['GET'])
 def deleteaccount(customer_id):
-    connection=create_sql_connection()
+    connection=create_connection_customers()
     cursor=connection.cursor()
     query="delete from customers where customer_id=%s"
     data=(customer_id,)
@@ -228,7 +242,7 @@ def companypage(companyname,company_id):
 
         if not price_per_day or price_per_day<0:
             return "Price per day required and needs to be valid"
-        connection=create_sql_connection()
+        connection=create_connection_companies()
         cursor=connection.cursor()
         check="select car_id, car_count, available from cars where name=%s and company_id=%s"
         data=(carname,company_id)
@@ -258,7 +272,7 @@ def companypage(companyname,company_id):
 @app.route('/company/<companyname>/<int:company_id>/stats', methods=['GET'])
 def companystats(companyname,company_id):
     if request.method=='GET':
-        connection=create_sql_connection()
+        connection=create_connection_companies()
         cursor=connection.cursor()
         query="select count(car_id), avg(price_per_day), sum(available) from cars where company_id=%s"
         data=(company_id,)
@@ -270,7 +284,7 @@ def companystats(companyname,company_id):
 
 @app.route('/company/<int:company_id>/cars',methods=['GET'])
 def company_cars(company_id):
-    connection=create_sql_connection()
+    connection=create_connection_companies()
     cursor=connection.cursor()
     query="select car_id, name, price_per_day, car_count, available from cars where company_id=%s"
     data=(company_id,)
@@ -282,7 +296,7 @@ def company_cars(company_id):
 
 @app.route('/company/bookings/<int:company_id>',methods=['GET'])
 def bookings(company_id):
-    connection=create_sql_connection()
+    connection=create_connection_companies()
     cursor=connection.cursor()
     query="select * from reservations where company_id=%s"
     data=(company_id,)
