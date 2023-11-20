@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Company statistics</title>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     </head>
     <body>
         <div class="wrapper">
@@ -9,6 +10,15 @@
             <p>Number of different cars: {{ statistics[0] }}</p>
             <p>Average Price per Day: {{ statistics[1] }}</p>
             <p>Number of Available Cars: {{ statistics[2] }}</p>
+            <p>Total revenue: {{ statistics[3] }}</p>
+            <p>Most rented car: {{ most_rented[0] }}</p>
+            <p>Least rented car: {{ least_rented[0] }}</p>
+        </div>
+        <div id="graphs-container" class="flex-container">
+            <div id="piechart" class="graph" style="height:300px; width:20%;">{{ pie_html | safe }}</div>
+            <br><br><br>
+            <br><br><br>
+            <div id="bargraph" class="graph" style="height:300px; width:40%;">{{ bar_html | safe }}</div>
         </div>
     </body>
 </html>
@@ -31,7 +41,7 @@ body {
     margin: 0;
 }
 
-.container {
+.wrapper {
     background: rgba(255, 255, 255, 0.2);
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -39,6 +49,9 @@ body {
     padding: 20px;
     text-align: center;
     max-width: 400px;
-    color: yellow
+    color: yellow;
+    margin-bottom: 20px;
 }
+
+
 </style>
