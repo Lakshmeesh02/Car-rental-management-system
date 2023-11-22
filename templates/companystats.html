@@ -10,12 +10,12 @@
             <p>Number of different cars: {{ statistics[0] }}</p>
             <p>Average Price per Day: {{ statistics[1] }}</p>
             <p>Number of Available Cars: {{ statistics[2] }}</p>
-            <p>Total revenue: {{ statistics[3] }}</p>
+            <p>Total revenue: {{ revenue[0] }}</p>
             <p>Most rented car: {{ most_rented[0] }}</p>
             <p>Least rented car: {{ least_rented[0] }}</p>
         </div>
         <div id="graphs-container" class="flex-container">
-            <div id="piechart" class="graph" style="height:300px; width:20%;">{{ pie_html | safe }}</div>
+            <div id="piechart" class="graph" style="height:300px; width:40%;">{{ pie_html | safe }}</div>
             <br><br><br>
             <br><br><br>
             <div id="bargraph" class="graph" style="height:300px; width:40%;">{{ bar_html | safe }}</div>
