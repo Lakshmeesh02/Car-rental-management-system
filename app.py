@@ -277,16 +277,21 @@ def companystats(companyname,company_id):
         connection=create_connection_companies()
         cursor=connection.cursor()
         query="""
-        select count(cars.car_id),
+        select count(distinct(cars.car_id)),
         avg(price_per_day),
-        sum(available),
-        sum(reservations.price)
-        from cars left join reservations on cars.car_id=reservations.car_id 
-        where cars.company_id=%s
-        """
+        sum(available) from cars where company_id=%s"""
         data=(company_id,)
         cursor.execute(query,data)
         statistics=cursor.fetchone()
+
+        query="""
+        select sum(price)
+        from reservations
+        where company_id=%s
+        """
+        data=(company_id,)
+        cursor.execute(query,data)
+        revenue=cursor.fetchone()
 
         query="""
         select cars.name, count(reservations.id) as rental_count
@@ -310,10 +315,16 @@ def companystats(companyname,company_id):
         cursor.execute(query,data)
         least_rented=cursor.fetchone()
 
-        availability_pie="select sum(car_count) as count, available from cars where company_id=%s group by available"
+        availability_pie="select name, sum(available) as count from cars where company_id=%s group by name"
         cursor.execute(availability_pie,data)
         availability_data=cursor.fetchall()
-        print(availability_data)
+        if availability_data:
+            models_available=pd.DataFrame(availability_data, columns=['name','count'])
+            models_available['percentage']=(models_available['count']/models_available['count'].sum())*100
+            pie_chart=px.pie(models_available, names='name', values='percentage', title='Car models availability distribution')
+            pie_html=pie_chart.to_html(full_html=False)
+        else:
+            pie_html = "No data available for car availability distribution."
 
         price_bar="select name, avg(price_per_day) as price_per_day from cars where company_id=%s group by name"
         cursor.execute(price_bar,data)
@@ -321,19 +332,10 @@ def companystats(companyname,company_id):
         cursor.close()
         connection.close()
 
-        if availability_data:
-            total_cars, available_cars=availability_data[0]
-            percentage_available=(available_cars/total_cars)*100
-            data={'count':[percentage_available, 100-percentage_available], 'available':['Available','Unavailable']}
-            df=pd.DataFrame(data)
-            pie_chart=px.pie(df, names='available', values='count', title='Car availability distribution')
-            pie_html=pie_chart.to_html(full_html=False)
-        else:
-            pie_html = "No data available for car availability distribution."
         df_price=pd.DataFrame(price_data, columns=['name','price_per_day'])
         bar_graph=px.bar(df_price, x='name', y='price_per_day', title='price for each car')
         bar_html=bar_graph.to_html(full_html=False)
-    return render_template("companystats.html",companyname=companyname,company_id=company_id,statistics=statistics, most_rented=most_rented, least_rented=least_rented, pie_html=pie_html, bar_html=bar_html)
+    return render_template("companystats.html",companyname=companyname,company_id=company_id,statistics=statistics, revenue=revenue, most_rented=most_rented, least_rented=least_rented, pie_html=pie_html, bar_html=bar_html)
 
 @app.route('/company/<int:company_id>/cars',methods=['GET'])
 def company_cars(company_id):
