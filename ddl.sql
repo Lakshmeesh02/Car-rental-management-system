@@ -126,4 +126,6 @@ INSERT INTO cars (car_id, name, company_id, price_per_day, car_count, available)
 INSERT INTO cars (car_id, name, company_id, price_per_day, car_count, available) VALUES (6, 'Truck E', 6, 80.0, 7, 5);
 INSERT INTO cars (car_id, name, company_id, price_per_day, car_count, available) VALUES (7, 'Electric F', 7, 60.0, 14, 11);
 INSERT INTO cars (car_id, name, company_id, price_per_day, car_count, available) VALUES (8, 'Luxury G', 8, 100.0, 5, 3);
-
+INSERT INTO cars (car_id, name, company_id, price_per_day, car_count, available) VALUES (9, 'Ford mustang', 3, 200.0, 6, 4);
+INSERT INTO cars (car_id, name, company_id, price_per_day, car_count, available) VALUES (10, 'Creta', 3, 80.0, 4, 2);
+INSERT INTO cars (car_id, name, company_id, price_per_day, car_count, available) VALUES (11, 'Eco Sport', 3, 75.0, 6, 3);
