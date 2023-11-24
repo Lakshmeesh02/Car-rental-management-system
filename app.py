@@ -3,6 +3,7 @@ import mysql.connector
 from datetime import datetime
 import plotly.express as px
 import pandas as pd
+from datetime import datetime,date
 
 app=Flask(__name__,static_folder='static')
 
@@ -150,7 +151,8 @@ def customerpage(customername,customer_id):
 def viewcars(location):
     connection=create_sql_connection()
     cursor=connection.cursor()
-    query="""select c.company_id, c.name, c.contact, c.location, cars.car_id, cars.name, cars.price_per_day, cars.available
+    query="""select c.company_id, c.name, c.contact, c.location,
+    cars.car_id, cars.name, cars.price_per_day, cars.available
     from companies as c
     inner join cars on cars.company_id=c.company_id 
     where substring_index(c.location,',',-1) = %s;"""
@@ -351,9 +353,10 @@ def company_cars(company_id):
 
 @app.route('/company/bookings/<int:company_id>',methods=['GET'])
 def bookings(company_id):
-    connection=create_connection_companies()
+    connection=create_sql_connection()
     cursor=connection.cursor()
-    query="select * from reservations where company_id=%s"
+    query="""SELECT r.*, c.contact AS customer_contact FROM reservations r
+    JOIN customers c ON r.customer_id = c.customer_id WHERE r.company_id = %s"""
     data=(company_id,)
     cursor.execute(query,data)
     reserves=cursor.fetchall()
@@ -361,6 +364,7 @@ def bookings(company_id):
     cursor.close()
     connection.close()
     return render_template("companybookings.html",reserves=reserves,company_id=company_id)
+
 
 if __name__=="__main__":
     app.run(debug=True)
